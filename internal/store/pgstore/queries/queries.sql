@@ -17,6 +17,11 @@ SELECT "id", "room_id", "message", "reaction_count", "answered"
 FROM messages
 WHERE "room_id" = $1;
 
+-- name: GetRoomMessage :one
+SELECT "id", "room_id", "message", "reaction_count", "answered"
+FROM messages
+WHERE "id" = $1;
+
 -- name: InsertMessage :one
 INSERT INTO messages ("room_id", "message")
 VALUES ($1, $2)
