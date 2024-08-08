@@ -156,7 +156,7 @@ func (h apiHandler) handleSubscribe(w http.ResponseWriter, r *http.Request) {
 	if _, ok := h.subscribers[rawRoomId]; !ok {
 		h.subscribers[rawRoomId] = make(map[*websocket.Conn]context.CancelFunc)
 	}
-	slog.Info("subscribed to room %s", rawRoomId, r.RemoteAddr)
+	slog.Info("subscribed to room", rawRoomId, r.RemoteAddr)
 	h.subscribers[rawRoomId][c] = cancel
 
 	h.mu.Unlock()
