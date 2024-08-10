@@ -107,7 +107,7 @@ func NewHandler(q *pgstore.Queries) http.Handler {
 						r.Get("/", a.handleGetRoomMessage)
 						r.Patch("/react", a.handleReactToMessage)
 						r.Delete("/react", a.handleRemoveReactFromMessage)
-						r.Patch("/answered", a.handleMarkAsAnswered)
+						r.Patch("/answer", a.handleMarkAsAnswered)
 					})
 				})
 			})
