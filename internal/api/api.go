@@ -40,6 +40,9 @@ type MessageMessageCreated struct {
 type MessageID struct {
 	ID string `json:"id"`
 }
+type MessageReaction struct {
+	Count int64 `json:"count"`
+}
 
 type Message struct {
 	Kind   string `json:"kind"`
@@ -369,8 +372,8 @@ func (h apiHandler) handleReactToMessage(w http.ResponseWriter, r *http.Request)
 	go h.NotifyClients(Message{
 		Kind:   MessageKindMessageReacted,
 		RoomID: rawRoomId,
-		Value: MessageID{
-			ID: messageId.String(),
+		Value: MessageReaction{
+			Count: count,
 		},
 	})
 }
@@ -418,8 +421,8 @@ func (h apiHandler) handleRemoveReactFromMessage(w http.ResponseWriter, r *http.
 	go h.NotifyClients(Message{
 		Kind:   MessageKindMessageRemoveReacted,
 		RoomID: rawRoomId,
-		Value: MessageID{
-			ID: messageId.String(),
+		Value: MessageReaction{
+			Count: count,
 		},
 	})
 }
