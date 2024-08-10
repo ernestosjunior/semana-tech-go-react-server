@@ -352,13 +352,19 @@ func (h apiHandler) handleReactToMessage(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	_, err = h.q.ReactToMessage(r.Context(), messageId)
+	count, err := h.q.ReactToMessage(r.Context(), messageId)
 
 	if err != nil {
 		http.Error(w, "something went wrong", http.StatusInternalServerError)
 		slog.Warn("failed to react to message", "error", err)
 		return
 	}
+
+	type response struct {
+		Count int64 `json:"count"`
+	}
+
+	SendJSON(w, response{Count: count})
 
 	go h.NotifyClients(Message{
 		Kind:   MessageKindMessageReacted,
@@ -395,13 +401,19 @@ func (h apiHandler) handleRemoveReactFromMessage(w http.ResponseWriter, r *http.
 		return
 	}
 
-	_, err = h.q.RemoveReactionFromMessage(r.Context(), messageId)
+	count, err := h.q.RemoveReactionFromMessage(r.Context(), messageId)
 
 	if err != nil {
 		http.Error(w, "something went wrong", http.StatusInternalServerError)
 		slog.Warn("failed to remove reaction from message", "error", err)
 		return
 	}
+
+	type response struct {
+		Count int64 `json:"count"`
+	}
+
+	SendJSON(w, response{Count: count})
 
 	go h.NotifyClients(Message{
 		Kind:   MessageKindMessageRemoveReacted,
@@ -445,6 +457,8 @@ func (h apiHandler) handleMarkAsAnswered(w http.ResponseWriter, r *http.Request)
 		slog.Warn("failed to mark message as answered", "error", err)
 		return
 	}
+
+	w.WriteHeader(http.StatusOK)
 
 	go h.NotifyClients(Message{
 		Kind:   MessageKingMessageAnswered,
